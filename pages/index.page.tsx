@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro';
 import { Box, Typography } from '@mui/material';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import StyledToggleButton from 'src/components/StyledToggleButton';
 import StyledToggleButtonGroup from 'src/components/StyledToggleButtonGroup';
@@ -28,6 +29,12 @@ export default function Home() {
 
   return (
     <>
+      <Image
+        src="/background_combo_deskop.png"
+        alt="Picture of the author"
+        className="object-cover"
+        layout="fill"
+      />
       <DashboardTopPanel />
 
       <ContentContainer>

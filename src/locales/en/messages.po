@@ -41,3 +41,11 @@ msgstr "Playground"
 #: src/utils/eMode.ts
 msgid "Stablecoin"
 msgstr "Stablecoin"
+
+#: src/ui-config/menu-items/index.tsx
+msgid "Stronghold"
+msgstr "Stronghold"
+
+#: src/ui-config/menu-items/index.tsx
+msgid "Wildlands"
+msgstr "Wildlands"
