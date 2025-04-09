@@ -33,6 +33,16 @@ export const navigation: Navigation[] = [
     dataCy: 'menuPlayground',
   },
   {
+    link: ROUTES.stronghold,
+    title: t`Stronghold`,
+    dataCy: 'menuStronghold',
+  },
+  {
+    link: ROUTES.wildlands,
+    title: t`Wildlands`,
+    dataCy: 'menuWildlands',
+  },
+  {
     link: ROUTES.faucet,
     title: t`Faucet`,
     isVisible: () => process.env.NEXT_PUBLIC_ENV === 'staging' || ENABLE_TESTNET,

@@ -1,1 +1,1 @@
-/*eslint-disable*/module.exports={messages:{"About":"About","Education":"Education","Faucet":"Faucet","Home":"Home","No search results{0}":["No search results",["0"]],"Playground":"Playground","Stablecoin":"Stablecoin"}};
+/*eslint-disable*/module.exports={messages:{"About":"About","Education":"Education","Faucet":"Faucet","Home":"Home","No search results{0}":["No search results",["0"]],"Playground":"Playground","Stablecoin":"Stablecoin","Stronghold":"Stronghold","Wildlands":"Wildlands"}};

@@ -118,16 +118,9 @@ export const ROUTES = {
   education: '/education',
   about: '/about',
   playground: '/playground',
-  markets: '/markets',
-  staking: '/staking',
-  governance: '/governance',
+  stronghold: '/stronghold',
+  wildlands: '/wildlands',
   faucet: '/faucet',
-  migrationTool: '/v3-migration',
-  marketMigrationTool: (marketName: CustomMarket) => `/v3-migration/?market=${marketName}`,
-  dynamicRenderedProposal: (proposalId: number) =>
-    `/governance/v3/proposal?proposalId=${proposalId}`,
   reserveOverview: (underlyingAsset: string, marketName: CustomMarket) =>
     `/reserve-overview/?underlyingAsset=${underlyingAsset}&marketName=${marketName}`,
-  history: '/history',
-  bridge: '/bridge',
 };
