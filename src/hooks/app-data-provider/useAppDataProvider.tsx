@@ -1,12 +1,14 @@
 import {
+  ComputedUserReserve,
   FormattedGhoReserveData,
   FormattedGhoUserData,
   formatUserSummaryWithDiscount,
   USD_DECIMALS,
   UserReserveData,
 } from '@aave/math-utils';
+import { AaveV3Ethereum } from '@bgd-labs/aave-address-book';
 import { formatUnits } from 'ethers/lib/utils';
-import React, { useContext } from 'react';
+import React, { PropsWithChildren, useContext } from 'react';
 import { EmodeCategory } from 'src/helpers/types';
 import { useWeb3Context } from 'src/libs/hooks/useWeb3Context';
 import { useRootStore } from 'src/store/root';
@@ -71,32 +73,32 @@ const AppDataContext = React.createContext<AppDataContextType>({} as AppDataCont
  * This is the only provider you'll ever need.
  * It fetches reserves /incentives & walletbalances & keeps them updated.
  */
-export const AppDataProvider: React.FC = ({ children }) => {
+export const AppDataProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const { currentAccount } = useWeb3Context();
 
   const currentMarketData = useRootStore((state) => state.currentMarketData);
   const currentMarket = useRootStore((state) => state.currentMarket);
   // pool hooks
 
-  const { data: reservesData, isLoading: reservesDataLoading } =
+  const { data: reservesData, isPending: reservesDataLoading } =
     usePoolReservesHumanized(currentMarketData);
-  const { data: formattedPoolReserves, isLoading: formattedPoolReservesLoading } =
+  const { data: formattedPoolReserves, isPending: formattedPoolReservesLoading } =
     usePoolFormattedReserves(currentMarketData);
   const baseCurrencyData = reservesData?.baseCurrencyData;
   // user hooks
 
   const eModes = formattedPoolReserves ? formatEmodes(formattedPoolReserves) : {};
 
-  const { data: userReservesData, isLoading: userReservesDataLoading } =
+  const { data: userReservesData, isPending: userReservesDataLoading } =
     useUserPoolReservesHumanized(currentMarketData);
-  const { data: userSummary, isLoading: userSummaryLoading } =
+  const { data: userSummary, isPending: userSummaryLoading } =
     useExtendedUserSummaryAndIncentives(currentMarketData);
   const userReserves = userReservesData?.userReserves;
 
   // gho hooks
-  const { data: formattedGhoUserData, isLoading: isGhoUserDataLoading } =
+  const { data: formattedGhoUserData, isPending: isGhoUserDataLoading } =
     useUserGhoPoolFormattedReserve(currentMarketData);
-  const { data: formattedGhoReserveData, isLoading: ghoReserveDataLoading } =
+  const { data: formattedGhoReserveData, isPending: ghoReserveDataLoading } =
     useGhoPoolFormattedReserve(currentMarketData);
 
   const formattedGhoReserveDataWithDefault = formattedGhoReserveData || {
@@ -140,9 +142,42 @@ export const AppDataProvider: React.FC = ({ children }) => {
           formatUnits(baseCurrencyData.marketReferenceCurrencyPriceInUsd, USD_DECIMALS)
         ),
       });
+
+      const userGhoReserve = user.userReservesData.find(
+        (r) => r.reserve.underlyingAsset === AaveV3Ethereum.ASSETS.GHO.UNDERLYING.toLowerCase()
+      );
+
+      if (!userGhoReserve) {
+        throw new Error('GHO reserve not found in user reserves data');
+      }
+
+      const mergeUserReserves = (reserve: ComputedUserReserve<FormattedReservesAndIncentives>) => {
+        if (reserve.underlyingAsset !== AaveV3Ethereum.ASSETS.GHO.UNDERLYING.toLowerCase()) {
+          return reserve;
+        }
+
+        if (reserve.variableBorrows === '0') {
+          return reserve;
+        }
+
+        // This amount takes into account the discount applied on the accrued interest.
+        const userGhoDebtBalance = formattedGhoUserData.userGhoBorrowBalance.toString();
+
+        // Merge with the user reserves so the correct debt balance can be shown throughout the app.
+        return {
+          ...reserve,
+          variableBorrows: userGhoDebtBalance,
+          variableBorrowsUSD: userGhoDebtBalance,
+          totalBorrowsUSD: userGhoDebtBalance,
+          totalBorrows: userGhoDebtBalance,
+          totalBorrowsMarketReferenceCurrency: userGhoDebtBalance,
+        };
+      };
+
       user = {
         ...user,
         ...userSummaryWithDiscount,
+        userReservesData: user.userReservesData.map(mergeUserReserves),
       };
     }
   }

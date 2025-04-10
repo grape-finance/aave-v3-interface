@@ -1,5 +1,4 @@
 import { FormatUserSummaryAndIncentivesResponse, valueToBigNumber } from '@aave/math-utils';
-import BigNumber from 'bignumber.js';
 import { ethers } from 'ethers';
 
 import {

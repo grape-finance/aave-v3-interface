@@ -1,4 +1,5 @@
 import { useRootStore } from 'src/store/root';
+import { useShallow } from 'zustand/shallow';
 
 // TODO: remove this
 // currently this reexport is a workaround so i don't have to alter and potentially create conflicts in 200 files
@@ -7,19 +8,21 @@ import { useRootStore } from 'src/store/root';
  */
 export const useProtocolDataContext = () =>
   useRootStore(
-    ({
-      currentChainId,
-      currentMarket,
-      currentMarketData,
-      currentNetworkConfig,
-      jsonRpcProvider,
-      setCurrentMarket,
-    }) => ({
-      currentChainId,
-      currentMarket,
-      currentMarketData,
-      currentNetworkConfig,
-      jsonRpcProvider,
-      setCurrentMarket,
-    })
+    useShallow(
+      ({
+        currentChainId,
+        currentMarket,
+        currentMarketData,
+        currentNetworkConfig,
+        jsonRpcProvider,
+        setCurrentMarket,
+      }) => ({
+        currentChainId,
+        currentMarket,
+        currentMarketData,
+        currentNetworkConfig,
+        jsonRpcProvider,
+        setCurrentMarket,
+      })
+    )
   );
