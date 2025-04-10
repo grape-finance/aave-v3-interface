@@ -1,4 +1,5 @@
 import { FormatUserSummaryAndIncentivesResponse, valueToBigNumber } from '@aave/math-utils';
+import { BigNumber } from 'bignumber.js';
 import { ethers } from 'ethers';
 
 import {
@@ -6,7 +7,6 @@ import {
   ExtendedFormattedUser,
 } from '../hooks/app-data-provider/useAppDataProvider';
 import { roundToTokenDecimals } from './utils';
-
 // Subset of ComputedReserveData
 interface PoolReserveBorrowSubset {
   borrowCap: string;
