@@ -12,7 +12,7 @@ export enum ErrorType {
 export const useFlashloan = (healthFactor: string, hfEffectOfFromAmount: string) => {
   return (
     healthFactor !== '-1' &&
-    new BigNumber(healthFactor).minus(new BigNumber(hfEffectOfFromAmount)).lt('1.05')
+    BigNumber(healthFactor).minus(BigNumber(hfEffectOfFromAmount)).lt('1.05')
   );
 };
 

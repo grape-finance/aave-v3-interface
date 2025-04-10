@@ -69,7 +69,7 @@ export const RepayModalContent = ({
   const repayWithATokens = tokenToRepayWith.address === poolReserve.aTokenAddress;
 
   const debt = userReserve?.variableBorrows || '0';
-  const debtUSD = new BigNumber(debt)
+  const debtUSD = BigNumber(debt)
     .multipliedBy(poolReserve.formattedPriceInMarketReferenceCurrency)
     .multipliedBy(marketReferencePriceInUsd)
     .shiftedBy(-USD_DECIMALS);
@@ -193,7 +193,7 @@ export const RepayModalContent = ({
   const amountAfterRepay = valueToBigNumber(debt)
     .minus(amount || '0')
     .toString(10);
-  const amountAfterRepayInUsd = new BigNumber(amountAfterRepay)
+  const amountAfterRepayInUsd = BigNumber(amountAfterRepay)
     .multipliedBy(poolReserve.formattedPriceInMarketReferenceCurrency)
     .multipliedBy(marketReferencePriceInUsd)
     .shiftedBy(-USD_DECIMALS);

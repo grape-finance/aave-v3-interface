@@ -43,12 +43,12 @@ const formatUserYield = memoize(
         if (reserve) {
           if (value.underlyingBalanceUSD !== '0') {
             acc.positiveProportion = acc.positiveProportion.plus(
-              new BigNumber(reserve.supplyAPY).multipliedBy(value.underlyingBalanceUSD)
+              BigNumber(reserve.supplyAPY).multipliedBy(value.underlyingBalanceUSD)
             );
             if (reserve.aIncentivesData) {
               reserve.aIncentivesData.forEach((incentive) => {
                 acc.positiveProportion = acc.positiveProportion.plus(
-                  new BigNumber(incentive.incentiveAPR).multipliedBy(value.underlyingBalanceUSD)
+                  BigNumber(incentive.incentiveAPR).multipliedBy(value.underlyingBalanceUSD)
                 );
               });
             }
@@ -70,14 +70,14 @@ const formatUserYield = memoize(
                 formattedGhoReserveData.ghoBorrowAPYWithMaxDiscount
               );
               acc.negativeProportion = acc.negativeProportion.plus(
-                new BigNumber(borrowRateAfterDiscount).multipliedBy(
+                BigNumber(borrowRateAfterDiscount).multipliedBy(
                   formattedGhoUserData.userGhoBorrowBalance
                 )
               );
               if (reserve.vIncentivesData) {
                 reserve.vIncentivesData.forEach((incentive) => {
                   acc.positiveProportion = acc.positiveProportion.plus(
-                    new BigNumber(incentive.incentiveAPR).multipliedBy(
+                    BigNumber(incentive.incentiveAPR).multipliedBy(
                       formattedGhoUserData.userGhoBorrowBalance
                     )
                   );
@@ -85,12 +85,12 @@ const formatUserYield = memoize(
               }
             } else {
               acc.negativeProportion = acc.negativeProportion.plus(
-                new BigNumber(reserve.variableBorrowAPY).multipliedBy(value.variableBorrowsUSD)
+                BigNumber(reserve.variableBorrowAPY).multipliedBy(value.variableBorrowsUSD)
               );
               if (reserve.vIncentivesData) {
                 reserve.vIncentivesData.forEach((incentive) => {
                   acc.positiveProportion = acc.positiveProportion.plus(
-                    new BigNumber(incentive.incentiveAPR).multipliedBy(value.variableBorrowsUSD)
+                    BigNumber(incentive.incentiveAPR).multipliedBy(value.variableBorrowsUSD)
                   );
                 });
               }
@@ -103,8 +103,8 @@ const formatUserYield = memoize(
         return acc;
       },
       {
-        positiveProportion: new BigNumber(0),
-        negativeProportion: new BigNumber(0),
+        positiveProportion: BigNumber(0),
+        negativeProportion: BigNumber(0),
       }
     );
 

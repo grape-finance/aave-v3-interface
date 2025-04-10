@@ -207,8 +207,8 @@ export const BridgeModalContent = () => {
 
   // string formatting for tx display
   const amountUsd = Number(amount) * sourceTokenInfo.tokenPriceUSD;
-  const parsedAmountFee = new BigNumber(amount || '0');
-  const parsedBridgeFee = new BigNumber(bridgeFeeFormatted || '0');
+  const parsedAmountFee = BigNumber(amount || '0');
+  const parsedBridgeFee = BigNumber(bridgeFeeFormatted || '0');
   const amountAfterFee = BigNumber.max(0, parsedAmountFee.minus(parsedBridgeFee));
   const amountAfterFeeFormatted = amountAfterFee.toString();
   const feeTokenBalance =

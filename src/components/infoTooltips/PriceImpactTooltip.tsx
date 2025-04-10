@@ -17,7 +17,7 @@ export const PriceImpactTooltip = ({
   inputAmountUSD,
   ...rest
 }: PriceImpactTooltipProps) => {
-  const priceDifference: BigNumber = new BigNumber(outputAmountUSD).minus(inputAmountUSD);
+  const priceDifference: BigNumber = BigNumber(outputAmountUSD).minus(inputAmountUSD);
   let priceImpact =
     inputAmountUSD && inputAmountUSD !== '0'
       ? priceDifference.dividedBy(inputAmountUSD).times(100).toFixed(2)

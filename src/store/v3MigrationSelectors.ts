@@ -487,7 +487,7 @@ export const selectMigrationBorrowPermitPayloads = (
     const combinedAmountInWei = valueToWei(totalDebt.toString(), debt.decimals);
     let bufferedAmount = combinedAmountInWei;
     if (buffer) {
-      const amountBN = new BigNumber(bufferedAmount);
+      const amountBN = BigNumber(bufferedAmount);
       const tenPercent = amountBN.dividedBy(10);
       bufferedAmount = amountBN.plus(tenPercent).toFixed(0);
     }

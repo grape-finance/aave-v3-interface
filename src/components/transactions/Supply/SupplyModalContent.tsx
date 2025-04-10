@@ -177,7 +177,7 @@ export const SupplyModalContent = React.memo(
       }
     };
 
-    const amountInEth = new BigNumber(amount).multipliedBy(
+    const amountInEth = BigNumber(amount).multipliedBy(
       poolReserve.formattedPriceInMarketReferenceCurrency
     );
 
@@ -378,7 +378,7 @@ export const SupplyWrappedTokenModalContent = ({
     }
   };
 
-  const amountInEth = new BigNumber(amount).multipliedBy(
+  const amountInEth = BigNumber(amount).multipliedBy(
     supplyingWrappedToken
       ? wrappedTokenConfig.tokenIn.formattedPriceInMarketReferenceCurrency
       : poolReserve.formattedPriceInMarketReferenceCurrency

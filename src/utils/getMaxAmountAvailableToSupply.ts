@@ -14,7 +14,7 @@ interface PoolReserveSupplySubset {
 }
 
 export function remainingCap(cap: string, total: string) {
-  return cap === '0' ? new BigNumber(-1) : new BigNumber(cap).minus(total);
+  return cap === '0' ? BigNumber(-1) : BigNumber(cap).minus(total);
 }
 
 export function getMaxAmountAvailableToSupply(

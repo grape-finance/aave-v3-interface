@@ -80,7 +80,7 @@ export const SupplyAssetsList = () => {
       if (reserve.supplyCap !== '0') {
         availableToDeposit = BigNumber.min(
           availableToDeposit,
-          new BigNumber(reserve.supplyCap).minus(reserve.totalLiquidity).multipliedBy('0.995')
+          BigNumber(reserve.supplyCap).minus(reserve.totalLiquidity).multipliedBy('0.995')
         );
       }
       const availableToDepositUSD = valueToBigNumber(availableToDeposit)
@@ -108,7 +108,7 @@ export const SupplyAssetsList = () => {
         if (reserve.supplyCap !== '0') {
           baseAvailableToDeposit = BigNumber.min(
             baseAvailableToDeposit,
-            new BigNumber(reserve.supplyCap).minus(reserve.totalLiquidity).multipliedBy('0.995')
+            BigNumber(reserve.supplyCap).minus(reserve.totalLiquidity).multipliedBy('0.995')
           );
         }
         const baseAvailableToDepositUSD = valueToBigNumber(baseAvailableToDeposit)
