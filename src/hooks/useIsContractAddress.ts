@@ -6,6 +6,8 @@ import { ProviderWithSend } from '../components/transactions/GovVote/temporary/V
 
 export const useIsContractAddress = (address: string, chainId?: number) => {
   const defaultChainId = useRootStore((store) => store.currentChainId);
+  //  Guard against severe misconfiguration of wallet -  if some bullshit is confiugured in a chain,
+  // it doies nto reaaly matter if this is a contract.  but we return false  just in case  instead of possible error
   let p: ProviderWithSend | undefined;
   try {
     p = getProvider(chainId ?? defaultChainId);

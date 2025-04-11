@@ -31,3 +31,7 @@ Menu items  are configured in [index.tsx](src/ui-config/menu-items/index.tsx).  
 defined in [Link.tsx](src/components/primitives/Link.tsx)
 
 
+
+## Market data configuration
+ - [marketsConfig.tsx](src/ui-config/marketsConfig.tsx) -  defined market configuration,   also source for
+faucet data configuration.  

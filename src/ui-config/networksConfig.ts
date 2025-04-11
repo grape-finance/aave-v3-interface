@@ -76,7 +76,7 @@ export const testnetConfig: Record<string, BaseNetworkConfig> = {
     name: 'Arbitrum Sepolia',
     publicJsonRPCUrl: [
       'https://sepolia-rollup.arbitrum.io/rpc',
-      'https://public.stackup.sh/api/v1/node/arbitrum-sepolia',
+      'https://arbitrum-sepolia-rpc.publicnode.com',
     ],
     publicJsonRPCWSUrl: 'https://sepolia-rollup.arbitrum.io/rpc',
     baseUniswapAdapter: '0x0',
