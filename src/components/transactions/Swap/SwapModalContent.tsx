@@ -1,7 +1,6 @@
 import { SwitchVerticalIcon } from '@heroicons/react/outline';
 import { Trans } from '@lingui/macro';
 import { Box, Stack, SvgIcon, Typography } from '@mui/material';
-import BigNumber from 'bignumber.js';
 import React, { useRef, useState } from 'react';
 import { PriceImpactTooltip } from 'src/components/infoTooltips/PriceImpactTooltip';
 import { FormattedNumber } from 'src/components/primitives/FormattedNumber';
@@ -73,7 +72,7 @@ export const SwapModalContent = ({
   // a user can never swap more then 100% of available as the txn would fail on withdraw step
   const maxAmountToSwap = BigNumber.min(
     userReserve.underlyingBalance,
-    new BigNumber(poolReserve.availableLiquidity).multipliedBy(0.99)
+    BigNumber(poolReserve.availableLiquidity).multipliedBy(0.99)
   ).toString(10);
 
   const isMaxSelected = _amount === '-1';

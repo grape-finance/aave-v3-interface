@@ -3,6 +3,7 @@ import {
   ApproveDelegationType,
   ApproveType,
   BaseDebtToken,
+  ChainId,
   DebtSwitchAdapterService,
   ERC20_2612Service,
   ERC20Service,
@@ -25,6 +26,7 @@ import {
   ReserveDataHumanized,
   ReservesIncentiveDataHumanized,
   UserReserveDataHumanized,
+  V3FaucetService,
   WithdrawAndSwitchAdapterService,
 } from '@aave/contract-helpers';
 import {
@@ -49,7 +51,6 @@ import { SwapActionProps } from 'src/components/transactions/Swap/SwapActions';
 import { WithdrawAndSwitchActionProps } from 'src/components/transactions/Withdraw/WithdrawAndSwitchActions';
 import { Approval } from 'src/helpers/useTransactionHandler';
 import { FormattedReservesAndIncentives } from 'src/hooks/pool/usePoolFormattedReserves';
-import { CustomFaucetService } from 'src/utils/faucetHelper';
 import { minBaseTokenRemainingByNetwork, optimizedPath } from 'src/utils/utils';
 import { StateCreator } from 'zustand';
 
@@ -170,6 +171,7 @@ export const createPoolSlice: StateCreator<
       });
     }
   }
+
   return {
     getCorrectPoolBundle() {
       const currentMarketData = get().currentMarketData;
@@ -268,7 +270,7 @@ export const createPoolSlice: StateCreator<
         throw Error('currently selected market does not have a faucet attached');
 
       if (currentMarketData.v3) {
-        const v3Service = new CustomFaucetService(
+        const v3Service = new V3FaucetService(
           jsonRpcProvider(),
           currentMarketData.addresses.FAUCET
         );
@@ -701,7 +703,11 @@ export const createPoolSlice: StateCreator<
     poolComputed: {
       get minRemainingBaseTokenBalance() {
         if (!get()) return '0.001';
-        const { currentNetworkConfig, currentChainId } = { ...get() };
+
+        const { currentNetworkConfig, currentChainId, connectedAccountIsContract } = { ...get() };
+
+        if (connectedAccountIsContract) return '0';
+
         const chainId = currentNetworkConfig.underlyingChainId || currentChainId;
         const min = minBaseTokenRemainingByNetwork[chainId];
         return min || '0.001';
@@ -766,7 +772,21 @@ export const createPoolSlice: StateCreator<
       return JSON.stringify(typeData);
     },
     estimateGasLimit: async (tx: PopulatedTransaction, chainId?: number) => {
-      const provider = get().jsonRpcProvider(chainId);
+      const { currentChainId, connectedAccountIsContract, jsonRpcProvider } = get();
+
+      const effectiveChainId = chainId ?? currentChainId;
+
+      /**
+       *  Trying to estimate gas on zkSync when connected with a smart contract address
+       *  will fail. In that case, we'll just return the default value for all transactions.
+       *
+       *  See here for more details: https://github.com/zkSync-Community-Hub/zksync-developers/discussions/144
+       */
+      if (effectiveChainId === ChainId.zksync && connectedAccountIsContract) {
+        return tx;
+      }
+
+      const provider = jsonRpcProvider(chainId);
       const defaultGasLimit: BigNumber = tx.gasLimit ? tx.gasLimit : BigNumber.from('0');
       delete tx.gasLimit;
       let estimatedGas = await provider.estimateGas(tx);

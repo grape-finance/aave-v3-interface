@@ -12,17 +12,21 @@ import {
 import Box from '@mui/material/Box';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+import { AvatarSize } from 'src/components/Avatar';
 import { ContentWithTooltip } from 'src/components/ContentWithTooltip';
+import { UserDisplay } from 'src/components/UserDisplay';
+import { ConnectWalletButton } from 'src/components/WalletConnection/ConnectWalletButton';
+import { useModalContext } from 'src/hooks/useModal';
+import { useWeb3Context } from 'src/libs/hooks/useWeb3Context';
 import { useRootStore } from 'src/store/root';
 import { ENABLE_TESTNET, FORK_ENABLED } from 'src/utils/marketsAndNetworksConfig';
+import { useShallow } from 'zustand/shallow';
 
 import { Link } from '../components/primitives/Link';
-import { useProtocolDataContext } from '../hooks/useProtocolDataContext';
 import { uiConfig } from '../uiConfig';
 import { NavItems } from './components/NavItems';
 import { MobileMenu } from './MobileMenu';
 import { SettingsMenu } from './SettingsMenu';
-import WalletWidget from './WalletWidget';
 
 interface Props {
   children: React.ReactElement;
@@ -45,12 +49,16 @@ export function AppHeader() {
   const md = useMediaQuery(breakpoints.down('md'));
   const sm = useMediaQuery(breakpoints.down('sm'));
 
-  const [mobileDrawerOpen, setMobileDrawerOpen] = useRootStore((state) => [
-    state.mobileDrawerOpen,
-    state.setMobileDrawerOpen,
-  ]);
+  const [mobileDrawerOpen, setMobileDrawerOpen, currentMarketData] = useRootStore(
+    useShallow((state) => [
+      state.mobileDrawerOpen,
+      state.setMobileDrawerOpen,
+      state.currentMarketData,
+    ])
+  );
 
-  const { currentMarketData } = useProtocolDataContext();
+  const { openReadMode } = useModalContext();
+  const { readOnlyMode } = useWeb3Context();
   const [walletWidgetOpen, setWalletWidgetOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -65,11 +73,6 @@ export function AppHeader() {
   }, [md]);
 
   const headerHeight = 48;
-
-  const toggleWalletWigit = (state: boolean) => {
-    if (md) setMobileDrawerOpen(state);
-    setWalletWidgetOpen(state);
-  };
 
   const toggleMobileMenu = (state: boolean) => {
     if (md) setMobileDrawerOpen(state);
@@ -98,7 +101,13 @@ export function AppHeader() {
         <Trans>Testnet mode is ON</Trans>
       </Typography>
       <Typography variant="description">
-        <Trans>The app is running in testnet mode.</Trans>
+        <Trans>The app is running in testnet mode. Learn how it works in</Trans>{' '}
+        <Link
+          href="https://aave.com/faq"
+          style={{ fontSize: '14px', fontWeight: 400, textDecoration: 'underline' }}
+        >
+          FAQ.
+        </Link>
       </Typography>
       <Button variant="outlined" sx={{ mt: '12px' }} onClick={disableTestnet}>
         <Trans>Disable testnet</Trans>
@@ -155,11 +164,8 @@ export function AppHeader() {
           }}
           onClick={() => setMobileMenuOpen(false)}
         >
-          <img src={uiConfig.appLogo} alt="Better Bank" width={40} height={40} />
+          <img src={uiConfig.appLogo} alt="AAVE" width={72} height={20} />
         </Box>
-        <Typography variant="h2" style={{ color: '#fff' }}>
-          <Trans>Better Bank</Trans>
-        </Typography>
         <Box sx={{ mr: sm ? 1 : 3 }}>
           {ENABLE_TESTNET && (
             <ContentWithTooltip tooltipContent={testnetTooltip} offset={[0, -4]} withoutHover>
@@ -168,7 +174,6 @@ export function AppHeader() {
                 size="small"
                 color="primary"
                 sx={{
-                  marginLeft: '20px',
                   backgroundColor: '#B6509E',
                   '&:hover, &.Mui-focusVisible': { backgroundColor: 'rgba(182, 80, 158, 0.7)' },
                 }}
@@ -208,12 +213,21 @@ export function AppHeader() {
 
         <Box sx={{ flexGrow: 1 }} />
 
-        {!mobileMenuOpen && (
-          <WalletWidget
-            open={walletWidgetOpen}
-            setOpen={toggleWalletWigit}
-            headerHeight={headerHeight}
-          />
+        {readOnlyMode ? (
+          <Button
+            variant="surface"
+            onClick={() => {
+              openReadMode();
+            }}
+          >
+            <UserDisplay
+              avatarProps={{ size: AvatarSize.SM }}
+              oneLiner={true}
+              titleProps={{ variant: 'buttonM' }}
+            />
+          </Button>
+        ) : (
+          <ConnectWalletButton />
         )}
 
         <Box sx={{ display: { xs: 'none', md: 'block' } }}>

@@ -54,7 +54,7 @@ const formatAggregatedBalance = ({
       acc[reserve.address] = {
         amount: normalize(reserve.amount, poolReserve.decimals),
         amountUSD: nativeToUSD({
-          amount: new BigNumber(reserve.amount),
+          amount: BigNumber(reserve.amount),
           currencyDecimals: poolReserve.decimals,
           priceInMarketReferenceCurrency: poolReserve.priceInMarketReferenceCurrency,
           marketReferenceCurrencyDecimals: baseCurrencyData.marketReferenceCurrencyDecimals,

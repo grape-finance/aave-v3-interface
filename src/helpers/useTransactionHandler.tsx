@@ -14,6 +14,7 @@ import { TransactionDetails } from 'src/store/transactionsSlice';
 import { ApprovalMethod } from 'src/store/walletSlice';
 import { getErrorTextFromError, TxAction } from 'src/ui-config/errorMapping';
 import { queryKeysFactory } from 'src/ui-config/queries';
+import { useShallow } from 'zustand/shallow';
 
 export const MOCK_SIGNED_HASH = 'Signed correctly';
 
@@ -44,6 +45,7 @@ export const useTransactionHandler = ({
   permitAction,
   skip,
   protocolAction,
+  deps = [],
   eventTxInfo,
 }: UseTransactionHandlerProps) => {
   const {
@@ -69,15 +71,17 @@ export const useTransactionHandler = ({
     addTransaction,
     signStakingApproval,
     currentMarketData,
-  ] = useRootStore((state) => [
-    state.signERC20Approval,
-    state.walletApprovalMethodPreference,
-    state.generateCreditDelegationSignatureRequest,
-    state.generatePermitPayloadForMigrationSupplyAsset,
-    state.addTransaction,
-    state.signStakingApproval,
-    state.currentMarketData,
-  ]);
+  ] = useRootStore(
+    useShallow((state) => [
+      state.signERC20Approval,
+      state.walletApprovalMethodPreference,
+      state.generateCreditDelegationSignatureRequest,
+      state.generatePermitPayloadForMigrationSupplyAsset,
+      state.addTransaction,
+      state.signStakingApproval,
+      state.currentMarketData,
+    ])
+  );
 
   const [approvalTxes, setApprovalTxes] = useState<EthereumTransactionTypeExtended[] | undefined>();
   const [actionTx, setActionTx] = useState<EthereumTransactionTypeExtended | undefined>();
@@ -433,18 +437,7 @@ export const useTransactionHandler = ({
       setApprovalTxes(undefined);
       setActionTx(undefined);
     }
-  }, [
-    handleGetPermitTxns,
-    handleGetTxns,
-    permitAction,
-    setGasLimit,
-    setLoadingTxns,
-    setMainTxState,
-    setTxError,
-    skip,
-    tryPermit,
-    walletApprovalMethodPreference,
-  ]);
+  }, [skip, ...deps, tryPermit, walletApprovalMethodPreference]);
 
   return {
     approval,

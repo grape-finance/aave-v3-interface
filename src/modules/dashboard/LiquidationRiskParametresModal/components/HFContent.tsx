@@ -1,7 +1,6 @@
 import { valueToBigNumber } from '@aave/math-utils';
 import { Trans } from '@lingui/macro';
 import { Box, Typography } from '@mui/material';
-import BigNumber from 'bignumber.js';
 import React from 'react';
 
 import { FormattedNumber } from '../../../../components/primitives/FormattedNumber';

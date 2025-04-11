@@ -6,7 +6,6 @@ import {
   VotingMachineProposalState,
 } from '@aave/contract-helpers';
 import { normalizeBN, valueToBigNumber } from '@aave/math-utils';
-import BigNumber from 'bignumber.js';
 import {
   EnhancedSubgraphProposal,
   Proposal,
@@ -53,14 +52,14 @@ export const getProposalVoteInfo = (proposal: EnhancedSubgraphProposal): Proposa
     proposal.constants.precisionDivider
   );
 
-  const allVotes = new BigNumber(proposal.votes.forVotes).plus(proposal.votes.againstVotes);
+  const allVotes = BigNumber(proposal.votes.forVotes).plus(proposal.votes.againstVotes);
   const forPercent = allVotes.gt(0)
-    ? new BigNumber(proposal.votes.forVotes).dividedBy(allVotes).toNumber()
+    ? BigNumber(proposal.votes.forVotes).dividedBy(allVotes).toNumber()
     : 0;
   const forVotes = normalizeBN(proposal.votes.forVotes, 18).toNumber();
 
   const againstPercent = allVotes.gt(0)
-    ? new BigNumber(proposal.votes.againstVotes).dividedBy(allVotes).toNumber()
+    ? BigNumber(proposal.votes.againstVotes).dividedBy(allVotes).toNumber()
     : 0;
   const againstVotes = normalizeBN(proposal.votes.againstVotes, 18).toNumber();
 
