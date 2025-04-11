@@ -173,7 +173,7 @@ export const getProvider = (chainId: ChainId): ProviderWithSend => {
     if (config.privateJsonRPCUrl) {
       chainProviders.push(config.privateJsonRPCUrl);
     }
-    if (config.publicJsonRPCUrl.length) {
+    if (config.publicJsonRPCUrl?.length) {
       config.publicJsonRPCUrl.map((rpc) => chainProviders.push(rpc));
     }
     if (!chainProviders.length) {

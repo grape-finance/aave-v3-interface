@@ -143,7 +143,6 @@ export default function MyApp(props: MyAppProps) {
                 onConnect={({ connectorId }) => setWalletType(connectorId)}
               >
                 <Web3ContextProvider>
-                  1
                   <AppGlobalStyles>
                     <AddressBlocked>
                       <ModalContextProvider>
