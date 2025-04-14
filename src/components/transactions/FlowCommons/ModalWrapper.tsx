@@ -14,10 +14,11 @@ import { useWeb3Context } from 'src/libs/hooks/useWeb3Context';
 import { useRootStore } from 'src/store/root';
 import { getNetworkConfig } from 'src/utils/marketsAndNetworksConfig';
 import { GENERAL } from 'src/utils/mixPanelEvents';
+import { useShallow } from 'zustand/shallow';
 
-import { TxModalTitle } from '../FlowCommons/TxModalTitle';
 import { ChangeNetworkWarning } from '../Warnings/ChangeNetworkWarning';
 import { TxErrorView } from './Error';
+import { TxModalTitle } from './TxModalTitle';
 
 export interface ModalWrapperProps {
   underlyingAsset: string;
@@ -48,8 +49,8 @@ export const ModalWrapper: React.FC<{
   keepWrappedSymbol,
 }) => {
   const { readOnlyModeAddress } = useWeb3Context();
-  const currentMarketData = useRootStore((store) => store.currentMarketData);
-  const currentNetworkConfig = useRootStore((store) => store.currentNetworkConfig);
+  const currentMarketData = useRootStore(useShallow((store) => store.currentMarketData));
+  const currentNetworkConfig = useRootStore(useShallow((store) => store.currentNetworkConfig));
   const { walletBalances } = useWalletBalances(currentMarketData);
   const { user, reserves } = useAppDataContext();
   const { txError, mainTxState } = useModalContext();

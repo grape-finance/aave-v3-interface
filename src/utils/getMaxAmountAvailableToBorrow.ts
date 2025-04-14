@@ -7,6 +7,7 @@ import {
   ExtendedFormattedUser,
 } from '../hooks/app-data-provider/useAppDataProvider';
 import { roundToTokenDecimals } from './utils';
+
 // Subset of ComputedReserveData
 interface PoolReserveBorrowSubset {
   borrowCap: string;
@@ -93,6 +94,7 @@ export function getMaxAmountAvailableToBorrow(
 /**
  * Calculates the maximum amount of GHO a user can mint
  * @param user
+ * @param poolReserve
  */
 export function getMaxGhoMintAmount(
   user: FormatUserSummaryAndIncentivesResponse,
@@ -159,6 +161,5 @@ export function assetCanBeBorrowedByUser(
     if (!reserveEmode) return false;
     return reserveEmode.borrowingEnabled;
   }
-  if (user?.isInIsolationMode && !borrowableInIsolation) return false;
-  return true;
+  return !(user?.isInIsolationMode && !borrowableInIsolation);
 }

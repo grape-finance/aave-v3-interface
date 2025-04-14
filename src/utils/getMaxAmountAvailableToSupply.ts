@@ -1,5 +1,6 @@
 import { API_ETH_MOCK_ADDRESS } from '@aave/contract-helpers';
 import { valueToBigNumber } from '@aave/math-utils';
+import { BigNumber } from 'bignumber.js';
 
 import { roundToTokenDecimals } from './utils';
 
@@ -14,7 +15,7 @@ interface PoolReserveSupplySubset {
 }
 
 export function remainingCap(cap: string, total: string) {
-  return cap === '0' ? BigNumber(-1) : BigNumber(cap).minus(total);
+  return cap === '0' ? new BigNumber(-1) : new BigNumber(cap).minus(total);
 }
 
 export function getMaxAmountAvailableToSupply(
