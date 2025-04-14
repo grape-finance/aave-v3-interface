@@ -1,9 +1,10 @@
 import { useRootStore } from 'src/store/root';
+import { useShallow } from 'zustand/shallow';
 
 import { useExtendedUserSummaryAndIncentives } from './pool/useExtendedUserSummaryAndIncentives';
 
 export const useZeroLTVBlockingWithdraw = () => {
-  const currentMarketData = useRootStore((state) => state.currentMarketData);
+  const currentMarketData = useRootStore(useShallow((state) => state.currentMarketData));
   const { data: userSummary } = useExtendedUserSummaryAndIncentives(currentMarketData);
 
   if (!currentMarketData.v3 || !userSummary) {
