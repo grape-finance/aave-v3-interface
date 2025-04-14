@@ -4,6 +4,7 @@ import { useWeb3Context } from 'src/libs/hooks/useWeb3Context';
 import { useRootStore } from 'src/store/root';
 import { TxErrorType } from 'src/ui-config/errorMapping';
 import { GENERAL } from 'src/utils/mixPanelEvents';
+import { useShallow } from 'zustand/shallow';
 
 import { Proposal } from './governance/useProposals';
 
@@ -142,7 +143,7 @@ export const ModalContextProvider: React.FC<PropsWithChildren> = ({ children }) 
   const [gasLimit, setGasLimit] = useState<string>('');
   const [loadingTxns, setLoadingTxns] = useState(false);
   const [txError, setTxError] = useState<TxErrorType>();
-  const trackEvent = useRootStore((store) => store.trackEvent);
+  const trackEvent = useRootStore(useShallow((store) => store.trackEvent));
 
   return (
     <ModalContext.Provider

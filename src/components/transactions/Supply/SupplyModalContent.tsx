@@ -2,6 +2,7 @@ import { API_ETH_MOCK_ADDRESS } from '@aave/contract-helpers';
 import { USD_DECIMALS, valueToBigNumber } from '@aave/math-utils';
 import { Trans } from '@lingui/macro';
 import { Skeleton, Stack, Typography } from '@mui/material';
+import { BigNumber } from 'bignumber.js';
 import React, { useEffect, useState } from 'react';
 import { WrappedTokenTooltipContent } from 'src/components/infoTooltips/WrappedTokenToolTipContent';
 import { FormattedNumber } from 'src/components/primitives/FormattedNumber';
@@ -17,7 +18,6 @@ import {
 } from 'src/hooks/token-wrapper/useTokenWrapper';
 import { useAssetCaps } from 'src/hooks/useAssetCaps';
 import { useModalContext } from 'src/hooks/useModal';
-import { useProtocolDataContext } from 'src/hooks/useProtocolDataContext';
 import { useWrappedTokens, WrappedTokenConfig } from 'src/hooks/useWrappedTokens';
 import { ERC20TokenType } from 'src/libs/web3-data-provider/Web3Provider';
 import { useRootStore } from 'src/store/root';
@@ -29,6 +29,7 @@ import { calculateHFAfterSupply } from 'src/utils/hfUtils';
 import { isFeatureEnabled } from 'src/utils/marketsAndNetworksConfig';
 import { GENERAL } from 'src/utils/mixPanelEvents';
 import { roundToTokenDecimals } from 'src/utils/utils';
+import { useShallow } from 'zustand/shallow';
 
 import {
   ExtendedFormattedUser,
@@ -61,7 +62,7 @@ export const SupplyModalContentWrapper = (
   params: ModalWrapperProps & { user: ExtendedFormattedUser }
 ) => {
   const user = params.user;
-  const { currentMarketData } = useProtocolDataContext();
+  const currentMarketData = useRootStore(useShallow((state) => state.currentMarketData));
   const wrappedTokenReserves = useWrappedTokens();
   const { walletBalances } = useWalletBalances(currentMarketData);
   const { supplyCap: supplyCapUsage, debtCeiling: debtCeilingUsage } = useAssetCaps();
@@ -144,10 +145,13 @@ export const SupplyModalContent = React.memo(
     user,
   }: SupplyModalContentProps) => {
     const { marketReferencePriceInUsd } = useAppDataContext();
-    const { currentMarketData, currentNetworkConfig } = useProtocolDataContext();
     const { mainTxState: supplyTxState, gasLimit, txError } = useModalContext();
-    const minRemainingBaseTokenBalance = useRootStore(
-      (state) => state.poolComputed.minRemainingBaseTokenBalance
+    const [minRemainingBaseTokenBalance, currentMarketData, currentNetworkConfig] = useRootStore(
+      useShallow((state) => [
+        state.poolComputed.minRemainingBaseTokenBalance,
+        state.currentMarketData,
+        state.currentNetworkConfig,
+      ])
     );
 
     // states
@@ -177,7 +181,7 @@ export const SupplyModalContent = React.memo(
       }
     };
 
-    const amountInEth = BigNumber(amount).multipliedBy(
+    const amountInEth = new BigNumber(amount).multipliedBy(
       poolReserve.formattedPriceInMarketReferenceCurrency
     );
 
@@ -286,7 +290,7 @@ export const SupplyWrappedTokenModalContent = ({
   user,
 }: SupplyModalContentProps) => {
   const { marketReferencePriceInUsd } = useAppDataContext();
-  const { currentMarketData } = useProtocolDataContext();
+  const currentMarketData = useRootStore((state) => state.currentMarketData);
   const { mainTxState: supplyTxState, gasLimit, txError } = useModalContext();
   const { walletBalances } = useWalletBalances(currentMarketData);
   const minRemainingBaseTokenBalance = useRootStore(
@@ -378,7 +382,7 @@ export const SupplyWrappedTokenModalContent = ({
     }
   };
 
-  const amountInEth = BigNumber(amount).multipliedBy(
+  const amountInEth = new BigNumber(amount).multipliedBy(
     supplyingWrappedToken
       ? wrappedTokenConfig.tokenIn.formattedPriceInMarketReferenceCurrency
       : poolReserve.formattedPriceInMarketReferenceCurrency

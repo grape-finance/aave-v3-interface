@@ -1,4 +1,5 @@
 import { valueToBigNumber } from '@aave/math-utils';
+import { BigNumber } from 'bignumber.js';
 import {
   ComputedReserveData,
   ComputedUserReserveData,

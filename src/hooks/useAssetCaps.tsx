@@ -42,7 +42,7 @@ const getAssetCapData = (asset: ComputedReserveData): AssetCapUsageData => {
   /*
     Aggregated Data
   */
-  const assetCapUsageData: AssetCapUsageData = {
+  return {
     reserve: asset,
     supplyCap: {
       percentUsed: supplyCapUsage,
@@ -75,8 +75,6 @@ const getAssetCapData = (asset: ComputedReserveData): AssetCapUsageData => {
         debtCeiling ? <DebtCeilingMaxedTooltip debtCeiling={debtCeiling} /> : null,
     },
   };
-
-  return assetCapUsageData;
 };
 
 /*
