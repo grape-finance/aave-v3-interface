@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro';
 import { Box, Skeleton } from '@mui/material';
+import { BigNumber } from 'bignumber.js';
 import { GENERAL } from 'src/utils/mixPanelEvents';
 
 import { FormattedNumber } from '../primitives/FormattedNumber';
@@ -17,7 +18,7 @@ export const PriceImpactTooltip = ({
   inputAmountUSD,
   ...rest
 }: PriceImpactTooltipProps) => {
-  const priceDifference: BigNumber = BigNumber(outputAmountUSD).minus(inputAmountUSD);
+  const priceDifference: BigNumber = new BigNumber(outputAmountUSD).minus(inputAmountUSD);
   let priceImpact =
     inputAmountUSD && inputAmountUSD !== '0'
       ? priceDifference.dividedBy(inputAmountUSD).times(100).toFixed(2)

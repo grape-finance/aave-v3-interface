@@ -26,16 +26,19 @@ export interface SubgraphConstants {
   expirationTime: string;
   cancellationFee: string;
 }
+
 export interface SubgraphProposalVotes {
   id: string;
   forVotes: string;
   againstVotes: string;
 }
+
 export interface SubgraphTransactionData {
   id: string;
   blockNumber: string;
   timestamp: string;
 }
+
 export interface SubgraphProposalTransactions {
   id: string;
   created: SubgraphTransactionData;
@@ -45,12 +48,14 @@ export interface SubgraphProposalTransactions {
   executed: SubgraphTransactionData | null;
   canceled: SubgraphTransactionData | null;
 }
+
 export interface SubgraphPayload {
   id: string;
   chainId: string;
   accessLevel: string;
   payloadsController: string;
 }
+
 export interface SubgraphVotingConfig {
   id: string;
   cooldownBeforeVotingStart: string;
@@ -59,17 +64,20 @@ export interface SubgraphVotingConfig {
   yesNoDifferential: string;
   minPropositionPower: string;
 }
+
 export interface SubgraphVotingPortal {
   id: string;
   votingMachineChainId: string;
   votingMachine: string;
   enabled: boolean;
 }
+
 export interface SubgraphProposalMetadata {
   id: string;
   title: string;
   rawContent: string;
 }
+
 export interface SubgraphProposal {
   id: string;
   creator: string;
@@ -354,6 +362,7 @@ export const useProposals = (proposalStateFilter?: ProposalV3State) => {
 
       return allPages.length;
     },
+    initialPageParam: 0,
   });
 };
 

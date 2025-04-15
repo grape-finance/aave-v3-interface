@@ -1,6 +1,5 @@
 import { API_ETH_MOCK_ADDRESS } from '@aave/contract-helpers';
-import React from 'react';
-import { ReactElement } from 'react-markdown/lib/react-markdown';
+import React, { ReactElement } from 'react';
 import {
   ComputedReserveData,
   ComputedUserReserveData,
@@ -14,7 +13,6 @@ import { useWeb3Context } from 'src/libs/hooks/useWeb3Context';
 import { useRootStore } from 'src/store/root';
 import { getNetworkConfig } from 'src/utils/marketsAndNetworksConfig';
 import { GENERAL } from 'src/utils/mixPanelEvents';
-import { useShallow } from 'zustand/shallow';
 
 import { ChangeNetworkWarning } from '../Warnings/ChangeNetworkWarning';
 import { TxErrorView } from './Error';
@@ -49,8 +47,8 @@ export const ModalWrapper: React.FC<{
   keepWrappedSymbol,
 }) => {
   const { readOnlyModeAddress } = useWeb3Context();
-  const currentMarketData = useRootStore(useShallow((store) => store.currentMarketData));
-  const currentNetworkConfig = useRootStore(useShallow((store) => store.currentNetworkConfig));
+  const currentMarketData = useRootStore((store) => store.currentMarketData);
+  const currentNetworkConfig = useRootStore((store) => store.currentNetworkConfig);
   const { walletBalances } = useWalletBalances(currentMarketData);
   const { user, reserves } = useAppDataContext();
   const { txError, mainTxState } = useModalContext();

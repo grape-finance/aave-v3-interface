@@ -49,7 +49,7 @@ export const StakeRewardClaimRestakeModalContent = ({
   // hardcoded as all rewards will be in aave token
   const rewardsSymbol = 'AAVE';
   const [_amount, setAmount] = useState('');
-  const amountRef = useRef<string>();
+  const amountRef = useRef<string>(undefined);
 
   const maxAmountToClaim = normalize(stakeUserData?.userIncentivesToClaim || '0', 18);
   const isMaxSelected = _amount === '-1';
