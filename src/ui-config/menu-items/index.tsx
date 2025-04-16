@@ -1,11 +1,4 @@
-import {
-  ArrowCircleRightIcon,
-  BookOpenIcon,
-  CreditCardIcon,
-  QuestionMarkCircleIcon,
-} from '@heroicons/react/outline';
 import { t } from '@lingui/macro';
-import { ReactNode } from 'react';
 import { ROUTES } from 'src/components/primitives/Link';
 import { ENABLE_TESTNET } from 'src/utils/marketsAndNetworksConfig';
 
@@ -21,31 +14,33 @@ interface Navigation {
 export const navigation: Navigation[] = [
   {
     link: ROUTES.dashboard,
-    title: t`Dashboard`,
+    title: t`Home`,
     dataCy: 'menuDashboard',
   },
   {
-    link: ROUTES.markets,
-    title: t`Markets`,
-    dataCy: 'menuMarkets',
+    link: ROUTES.education,
+    title: t`Education`,
+    dataCy: 'menuEducation',
   },
   {
-    link: ROUTES.staking,
-    title: t`Stake`,
-    dataCy: 'menuStake',
-    isVisible: () =>
-      process.env.NEXT_PUBLIC_ENABLE_STAKING === 'true' &&
-      process.env.NEXT_PUBLIC_ENV === 'prod' &&
-      !ENABLE_TESTNET,
+    link: ROUTES.about,
+    title: t`About`,
+    dataCy: 'menuAbout',
   },
   {
-    link: ROUTES.governance,
-    title: t`Governance`,
-    dataCy: 'menuGovernance',
-    // isVisible: () =>
-    //   process.env.NEXT_PUBLIC_ENABLE_GOVERNANCE === 'true' &&
-    //   process.env.NEXT_PUBLIC_ENV === 'prod' &&
-    //   !ENABLE_TESTNET,
+    link: ROUTES.playground,
+    title: t`Playground`,
+    dataCy: 'menuPlayground',
+  },
+  {
+    link: ROUTES.stronghold,
+    title: t`Stronghold`,
+    dataCy: 'menuStronghold',
+  },
+  {
+    link: ROUTES.wildlands,
+    title: t`Wildlands`,
+    dataCy: 'menuWildlands',
   },
   {
     link: ROUTES.faucet,
@@ -53,38 +48,3 @@ export const navigation: Navigation[] = [
     isVisible: () => process.env.NEXT_PUBLIC_ENV === 'staging' || ENABLE_TESTNET,
   },
 ];
-
-interface MoreMenuItem extends Navigation {
-  icon: ReactNode;
-  makeLink?: (walletAddress: string) => string;
-}
-
-const moreMenuItems: MoreMenuItem[] = [
-  {
-    link: 'https://docs.aave.com/faq/',
-    title: t`FAQ`,
-    icon: <QuestionMarkCircleIcon />,
-  },
-  {
-    link: 'https://docs.aave.com/portal/',
-    title: t`Developers`,
-    icon: <BookOpenIcon />,
-  },
-  {
-    link: 'https://legacy-markets.aave.com/',
-    title: t`Legacy Markets`,
-    icon: <ArrowCircleRightIcon />,
-  },
-];
-
-const fiatEnabled = process.env.NEXT_PUBLIC_FIAT_ON_RAMP;
-if (fiatEnabled === 'true') {
-  moreMenuItems.push({
-    link: 'https://global.transak.com',
-    makeLink: (walletAddress) =>
-      `${process.env.NEXT_PUBLIC_TRANSAK_APP_URL}/?apiKey=${process.env.NEXT_PUBLIC_TRANSAK_API_KEY}&walletAddress=${walletAddress}&disableWalletAddressForm=true`,
-    title: t`Buy Crypto With Fiat`,
-    icon: <CreditCardIcon />,
-  });
-}
-export const moreNavigation: MoreMenuItem[] = [...moreMenuItems];

@@ -1,6 +1,5 @@
 import { API_ETH_MOCK_ADDRESS } from '@aave/contract-helpers';
-import React from 'react';
-import { ReactElement } from 'react-markdown/lib/react-markdown';
+import React, { ReactElement } from 'react';
 import {
   ComputedReserveData,
   ComputedUserReserveData,
@@ -15,9 +14,9 @@ import { useRootStore } from 'src/store/root';
 import { getNetworkConfig } from 'src/utils/marketsAndNetworksConfig';
 import { GENERAL } from 'src/utils/mixPanelEvents';
 
-import { TxModalTitle } from '../FlowCommons/TxModalTitle';
 import { ChangeNetworkWarning } from '../Warnings/ChangeNetworkWarning';
 import { TxErrorView } from './Error';
+import { TxModalTitle } from './TxModalTitle';
 
 export interface ModalWrapperProps {
   underlyingAsset: string;

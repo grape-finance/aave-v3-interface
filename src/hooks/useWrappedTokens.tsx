@@ -3,6 +3,7 @@ import { AaveV3Ethereum } from '@bgd-labs/aave-address-book';
 import { useRootStore } from 'src/store/root';
 import { CustomMarket } from 'src/ui-config/marketsConfig';
 import { amountToUsd } from 'src/utils/utils';
+import { useShallow } from 'zustand/shallow';
 
 import { useAppDataContext } from './app-data-provider/useAppDataProvider';
 
@@ -39,16 +40,15 @@ const wrappedTokenConfig: {
 export const useWrappedTokens = () => {
   const { marketReferencePriceInUsd, marketReferenceCurrencyDecimals, reserves } =
     useAppDataContext();
-  const currentMarket = useRootStore((store) => store.currentMarket);
+  const currentMarket = useRootStore(useShallow((store) => store.currentMarket));
 
   if (!reserves || reserves.length === 0) {
     return [];
   }
 
   const wrappedTokens = wrappedTokenConfig[currentMarket] ?? [];
-  let wrappedTokenReserves: WrappedTokenConfig[] = [];
 
-  wrappedTokenReserves = wrappedTokens.map<WrappedTokenConfig>((config) => {
+  return wrappedTokens.map<WrappedTokenConfig>((config) => {
     const tokenInReserve = reserves.find((reserve) => reserve.underlyingAsset === config.tokenIn);
     const tokenOutReserve = reserves.find((reserve) => reserve.underlyingAsset === config.tokenOut);
 
@@ -92,6 +92,4 @@ export const useWrappedTokens = () => {
       tokenWrapperAddress: config.tokenWrapperContractAddress,
     };
   });
-
-  return wrappedTokenReserves;
 };

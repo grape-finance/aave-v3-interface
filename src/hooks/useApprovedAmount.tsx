@@ -3,6 +3,7 @@ import { useRootStore } from 'src/store/root';
 import { MarketDataType } from 'src/ui-config/marketsConfig';
 import { queryKeysFactory } from 'src/ui-config/queries';
 import { useSharedDependencies } from 'src/ui-config/SharedDependenciesProvider';
+import { useShallow } from 'zustand/shallow';
 
 export const useApprovedAmount = ({
   chainId,
@@ -14,7 +15,7 @@ export const useApprovedAmount = ({
   spender: string;
 }) => {
   const { approvedAmountService } = useSharedDependencies();
-  const user = useRootStore((store) => store.account);
+  const user = useRootStore(useShallow((store) => store.account));
   return useQuery({
     queryFn: () => approvedAmountService.getApprovedAmount(chainId, user, token, spender),
     queryKey: queryKeysFactory.approvedAmount(user, token, spender, chainId),
@@ -23,7 +24,7 @@ export const useApprovedAmount = ({
 
 export const usePoolApprovedAmount = (marketData: MarketDataType, token: string) => {
   const { approvedAmountService } = useSharedDependencies();
-  const user = useRootStore((store) => store.account);
+  const user = useRootStore(useShallow((store) => store.account));
   return useQuery({
     queryFn: () => approvedAmountService.getPoolApprovedAmount(marketData, user, token),
     queryKey: queryKeysFactory.poolApprovedAmount(user, token, marketData),

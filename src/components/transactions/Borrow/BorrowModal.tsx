@@ -6,6 +6,7 @@ import { useProtocolDataContext } from 'src/hooks/useProtocolDataContext';
 import { useRootStore } from 'src/store/root';
 import { displayGhoForMintableMarket } from 'src/utils/ghoUtilities';
 import { GENERAL } from 'src/utils/mixPanelEvents';
+import { useShallow } from 'zustand/shallow';
 
 import { BasicModal } from '../../primitives/BasicModal';
 import { ModalWrapper } from '../FlowCommons/ModalWrapper';
@@ -19,7 +20,7 @@ export const BorrowModal = () => {
   const { currentMarket } = useProtocolDataContext();
 
   const [borrowUnWrapped, setBorrowUnWrapped] = useState(true);
-  const [trackEvent] = useRootStore((store) => [store.trackEvent]);
+  const [trackEvent] = useRootStore(useShallow((store) => [store.trackEvent]));
 
   const handleBorrowUnwrapped = (borrowUnWrapped: boolean) => {
     trackEvent(GENERAL.OPEN_MODAL, {

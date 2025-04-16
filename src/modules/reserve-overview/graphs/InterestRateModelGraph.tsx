@@ -72,7 +72,7 @@ function getRates({
     // When hovering below optimal utilization rate, actual data
     else if (utilization < formattedOptimalUtilizationRate) {
       const theoreticalVariableAPY = normalizeBN(
-        new BigNumber(baseVariableBorrowRate).plus(
+        BigNumber(baseVariableBorrowRate).plus(
           rayDiv(rayMul(variableRateSlope1, normalizeBN(utilization, -25)), optimalUsageRatio)
         ),
         27
@@ -89,7 +89,7 @@ function getRates({
         RAY.minus(optimalUsageRatio)
       );
       const theoreticalVariableAPY = normalizeBN(
-        new BigNumber(baseVariableBorrowRate)
+        BigNumber(baseVariableBorrowRate)
           .plus(variableRateSlope1)
           .plus(rayMul(variableRateSlope2, excess)),
         27
@@ -147,7 +147,7 @@ export const InterestRateModelGraph = withTooltip<AreaProps, TooltipData>(
       background: theme.palette.background.default,
     };
 
-    const data = useMemo(() => getRates(reserve), [JSON.stringify(reserve)]);
+    const data = useMemo(() => getRates(reserve), [reserve]);
 
     // bounds
     const innerWidth = width - margin.left - margin.right;
@@ -170,7 +170,7 @@ export const InterestRateModelGraph = withTooltip<AreaProps, TooltipData>(
         domain: [0, (maxY || 0) * 1.1],
         nice: true,
       });
-    }, [innerHeight, data, reserve]);
+    }, [innerHeight, data]);
 
     // tooltip handler
     const handleTooltip = useCallback(
@@ -199,7 +199,7 @@ export const InterestRateModelGraph = withTooltip<AreaProps, TooltipData>(
         label: 'optimal',
       },
       {
-        value: new BigNumber(reserve.utilizationRate).multipliedBy(100).toNumber(),
+        value: BigNumber(reserve.utilizationRate).multipliedBy(100).toNumber(),
         label: 'current',
       },
     ];

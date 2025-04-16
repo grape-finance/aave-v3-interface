@@ -3,11 +3,10 @@ import { Button, List, ListItem, Typography, useMediaQuery, useTheme } from '@mu
 import * as React from 'react';
 import { useRootStore } from 'src/store/root';
 import { NAV_BAR } from 'src/utils/mixPanelEvents';
+import { useShallow } from 'zustand/shallow';
 
 import { Link } from '../../components/primitives/Link';
-import { useProtocolDataContext } from '../../hooks/useProtocolDataContext';
 import { navigation } from '../../ui-config/menu-items';
-import { MoreMenu } from '../MoreMenu';
 
 interface NavItemsProps {
   setOpen?: (value: boolean) => void;
@@ -15,11 +14,11 @@ interface NavItemsProps {
 
 export const NavItems = ({ setOpen }: NavItemsProps) => {
   const { i18n } = useLingui();
-  const { currentMarketData } = useProtocolDataContext();
-
   const { breakpoints } = useTheme();
   const md = useMediaQuery(breakpoints.down('md'));
-  const trackEvent = useRootStore((store) => store.trackEvent);
+  const [trackEvent, currentMarketData] = useRootStore(
+    useShallow((store) => [store.trackEvent, store.currentMarketData])
+  );
   const handleClick = (title: string, isMd: boolean) => {
     if (isMd && setOpen) {
       trackEvent(NAV_BAR.MAIN_MENU, { nav_link: title });
@@ -92,10 +91,6 @@ export const NavItems = ({ setOpen }: NavItemsProps) => {
             )}
           </ListItem>
         ))}
-
-      <ListItem sx={{ display: { xs: 'none', md: 'flex' }, width: 'unset' }} disablePadding>
-        <MoreMenu />
-      </ListItem>
     </List>
   );
 };

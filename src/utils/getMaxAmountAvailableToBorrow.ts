@@ -1,5 +1,5 @@
 import { FormatUserSummaryAndIncentivesResponse, valueToBigNumber } from '@aave/math-utils';
-import BigNumber from 'bignumber.js';
+import { BigNumber } from 'bignumber.js';
 import { ethers } from 'ethers';
 
 import {
@@ -94,6 +94,7 @@ export function getMaxAmountAvailableToBorrow(
 /**
  * Calculates the maximum amount of GHO a user can mint
  * @param user
+ * @param poolReserve
  */
 export function getMaxGhoMintAmount(
   user: FormatUserSummaryAndIncentivesResponse,
@@ -160,6 +161,5 @@ export function assetCanBeBorrowedByUser(
     if (!reserveEmode) return false;
     return reserveEmode.borrowingEnabled;
   }
-  if (user?.isInIsolationMode && !borrowableInIsolation) return false;
-  return true;
+  return !(user?.isInIsolationMode && !borrowableInIsolation);
 }

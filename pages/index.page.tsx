@@ -1,10 +1,11 @@
 import { Trans } from '@lingui/macro';
 import { Box, Typography } from '@mui/material';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import StyledToggleButton from 'src/components/StyledToggleButton';
 import StyledToggleButtonGroup from 'src/components/StyledToggleButtonGroup';
-import { useProtocolDataContext } from 'src/hooks/useProtocolDataContext';
 import { useRootStore } from 'src/store/root';
+import { useShallow } from 'zustand/shallow';
 
 import { ConnectWalletPaper } from '../src/components/ConnectWalletPaper';
 import { ContentContainer } from '../src/components/ContentContainer';
@@ -14,20 +15,26 @@ import { DashboardContentWrapper } from '../src/modules/dashboard/DashboardConte
 import { DashboardTopPanel } from '../src/modules/dashboard/DashboardTopPanel';
 
 export default function Home() {
-  const { currentAccount, loading: web3Loading } = useWeb3Context();
-  const { currentMarket } = useProtocolDataContext();
-  const trackEvent = useRootStore((store) => store.trackEvent);
-
+  const { currentAccount } = useWeb3Context();
+  const [trackEvent, currentMarket] = useRootStore(
+    useShallow((store) => [store.trackEvent, store.currentMarket])
+  );
   const [mode, setMode] = useState<'supply' | 'borrow' | ''>('supply');
   useEffect(() => {
     trackEvent('Page Viewed', {
       'Page Name': 'Dashboard',
       Market: currentMarket,
     });
-  }, [trackEvent]);
+  }, [currentMarket, trackEvent]);
 
   return (
     <>
+      <Image
+        src="/background_combo_deskop.png"
+        alt="Picture of the author"
+        className="object-cover"
+        layout="fill"
+      />
       <DashboardTopPanel />
 
       <ContentContainer>
@@ -63,7 +70,7 @@ export default function Home() {
         {currentAccount ? (
           <DashboardContentWrapper isBorrow={mode === 'borrow'} />
         ) : (
-          <ConnectWalletPaper loading={web3Loading} />
+          <ConnectWalletPaper />
         )}
       </ContentContainer>
     </>

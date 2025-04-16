@@ -1,9 +1,10 @@
 import { ChainId, Stake } from '@aave/contract-helpers';
-import { createContext, useContext, useState } from 'react';
+import { createContext, PropsWithChildren, useContext, useState } from 'react';
 import { useWeb3Context } from 'src/libs/hooks/useWeb3Context';
 import { useRootStore } from 'src/store/root';
 import { TxErrorType } from 'src/ui-config/errorMapping';
 import { GENERAL } from 'src/utils/mixPanelEvents';
+import { useShallow } from 'zustand/shallow';
 
 import { Proposal } from './governance/useProposals';
 
@@ -31,6 +32,7 @@ export enum ModalType {
   StakingMigrate,
   GovRepresentatives,
   Bridge,
+  ReadMode,
 }
 
 export interface ModalArgsType {
@@ -123,13 +125,14 @@ export interface ModalContextType<T extends ModalArgsType> {
   setLoadingTxns: (loading: boolean) => void;
   txError: TxErrorType | undefined;
   setTxError: (error: TxErrorType | undefined) => void;
+  openReadMode: () => void;
 }
 
 export const ModalContext = createContext<ModalContextType<ModalArgsType>>(
   {} as ModalContextType<ModalArgsType>
 );
 
-export const ModalContextProvider: React.FC = ({ children }) => {
+export const ModalContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const { setSwitchNetworkError } = useWeb3Context();
   // contains the current modal open state if any
   const [type, setType] = useState<ModalType>();
@@ -140,11 +143,14 @@ export const ModalContextProvider: React.FC = ({ children }) => {
   const [gasLimit, setGasLimit] = useState<string>('');
   const [loadingTxns, setLoadingTxns] = useState(false);
   const [txError, setTxError] = useState<TxErrorType>();
-  const trackEvent = useRootStore((store) => store.trackEvent);
+  const trackEvent = useRootStore(useShallow((store) => store.trackEvent));
 
   return (
     <ModalContext.Provider
       value={{
+        openReadMode: () => {
+          setType(ModalType.ReadMode);
+        },
         openSupply: (underlyingAsset, currentMarket, name, funnel, isReserve) => {
           setType(ModalType.Supply);
           setArgs({ underlyingAsset });

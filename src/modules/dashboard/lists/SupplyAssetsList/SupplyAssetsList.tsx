@@ -2,7 +2,7 @@ import { API_ETH_MOCK_ADDRESS } from '@aave/contract-helpers';
 import { USD_DECIMALS, valueToBigNumber } from '@aave/math-utils';
 import { Trans } from '@lingui/macro';
 import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
-import BigNumber from 'bignumber.js';
+import { BigNumber } from 'bignumber.js';
 import { Fragment, useState } from 'react';
 import { ListColumn } from 'src/components/lists/ListColumn';
 import { ListHeaderTitle } from 'src/components/lists/ListHeaderTitle';
@@ -81,7 +81,7 @@ export const SupplyAssetsList = () => {
       if (reserve.supplyCap !== '0') {
         availableToDeposit = BigNumber.min(
           availableToDeposit,
-          new BigNumber(reserve.supplyCap).minus(reserve.totalLiquidity).multipliedBy('0.995')
+          BigNumber(reserve.supplyCap).minus(reserve.totalLiquidity).multipliedBy('0.995')
         );
       }
       const availableToDepositUSD = valueToBigNumber(availableToDeposit)
@@ -109,7 +109,7 @@ export const SupplyAssetsList = () => {
         if (reserve.supplyCap !== '0') {
           baseAvailableToDeposit = BigNumber.min(
             baseAvailableToDeposit,
-            new BigNumber(reserve.supplyCap).minus(reserve.totalLiquidity).multipliedBy('0.995')
+            BigNumber(reserve.supplyCap).minus(reserve.totalLiquidity).multipliedBy('0.995')
           );
         }
         const baseAvailableToDepositUSD = valueToBigNumber(baseAvailableToDeposit)
