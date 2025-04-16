@@ -22,7 +22,7 @@ TENDERLY_ACCOUNT=Aave
 TENDERLY_PROJECT=QA
 ```
 
-`cp .env.example .env` - execute before spining up environment if you want to check Stake / Governance pages.
+`cp .env.example .env` - execute before spinning up environment if you want to check Stake / Governance pages.
 
 3. run `yarn run test:open`
 
