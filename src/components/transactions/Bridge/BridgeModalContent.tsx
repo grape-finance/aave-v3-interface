@@ -10,6 +10,7 @@ import {
   SvgIcon,
   Typography,
 } from '@mui/material';
+import { BigNumber } from 'bignumber.js';
 import { constants } from 'ethers';
 import { formatUnits } from 'ethers/lib/utils';
 import React, { useEffect, useState } from 'react';
@@ -56,7 +57,7 @@ const defaultNetworkMarket = marketsData[defaultNetwork.chainId];
 
 export const BridgeModalContent = () => {
   const { mainTxState: bridgeTxState, txError, close, gasLimit } = useModalContext();
-  const [user] = useRootStore((state) => [state.account]);
+  const user = useRootStore((state) => state.account);
   const [destinationAccount, setDestinationAccount] = useState(user);
   const [amount, setAmount] = useState('');
   const [maxSelected, setMaxSelected] = useState(false);
@@ -112,7 +113,7 @@ export const BridgeModalContent = () => {
     if (feeTokenListWithBalance && feeTokenListWithBalance.length > 0 && !selectedFeeToken) {
       setSelectedFeeToken(feeTokenListWithBalance[0]);
     }
-  }, [feeTokenListWithBalance, sourceNetworkObj, selectedFeeToken]);
+  }, [feeTokenListWithBalance, sourceNetworkObj]);
 
   useEffect(() => {
     // reset when source network changes
@@ -207,8 +208,8 @@ export const BridgeModalContent = () => {
 
   // string formatting for tx display
   const amountUsd = Number(amount) * sourceTokenInfo.tokenPriceUSD;
-  const parsedAmountFee = BigNumber(amount || '0');
-  const parsedBridgeFee = BigNumber(bridgeFeeFormatted || '0');
+  const parsedAmountFee = new BigNumber(amount || '0');
+  const parsedBridgeFee = new BigNumber(bridgeFeeFormatted || '0');
   const amountAfterFee = BigNumber.max(0, parsedAmountFee.minus(parsedBridgeFee));
   const amountAfterFeeFormatted = amountAfterFee.toString();
   const feeTokenBalance =

@@ -7,16 +7,17 @@ import {
 } from '@aave/math-utils';
 import { Trans } from '@lingui/macro';
 import Typography from '@mui/material/Typography';
+import { BigNumber } from 'bignumber.js';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   ExtendedFormattedUser,
   useAppDataContext,
 } from 'src/hooks/app-data-provider/useAppDataProvider';
 import { useModalContext } from 'src/hooks/useModal';
-import { useProtocolDataContext } from 'src/hooks/useProtocolDataContext';
 import { useRootStore } from 'src/store/root';
 import { displayGhoForMintableMarket } from 'src/utils/ghoUtilities';
 import { getNetworkConfig } from 'src/utils/marketsAndNetworksConfig';
+import { useShallow } from 'zustand/shallow';
 
 import { Asset, AssetInput } from '../AssetInput';
 import { GasEstimationError } from '../FlowCommons/GasEstimationError';
@@ -44,11 +45,16 @@ export const RepayModalContent = ({
 }: ModalWrapperProps & { user: ExtendedFormattedUser }) => {
   const { gasLimit, mainTxState: repayTxState, txError } = useModalContext();
   const { marketReferencePriceInUsd } = useAppDataContext();
-  const { currentChainId, currentMarketData, currentMarket } = useProtocolDataContext();
 
-  const [minRemainingBaseTokenBalance] = useRootStore((store) => [
-    store.poolComputed.minRemainingBaseTokenBalance,
-  ]);
+  const [minRemainingBaseTokenBalance, currentChainId, currentMarketData, currentMarket] =
+    useRootStore(
+      useShallow((store) => [
+        store.poolComputed.minRemainingBaseTokenBalance,
+        store.currentChainId,
+        store.currentMarketData,
+        store.currentMarket,
+      ])
+    );
 
   // states
   const [tokenToRepayWith, setTokenToRepayWith] = useState<RepayAsset>({
@@ -60,7 +66,7 @@ export const RepayModalContent = ({
   const [assets, setAssets] = useState<RepayAsset[]>([tokenToRepayWith]);
   const [repayMax, setRepayMax] = useState('');
   const [_amount, setAmount] = useState('');
-  const amountRef = useRef<string>();
+  const amountRef = useRef<string>(undefined);
 
   const networkConfig = getNetworkConfig(currentChainId);
 
@@ -69,7 +75,7 @@ export const RepayModalContent = ({
   const repayWithATokens = tokenToRepayWith.address === poolReserve.aTokenAddress;
 
   const debt = userReserve?.variableBorrows || '0';
-  const debtUSD = BigNumber(debt)
+  const debtUSD = new BigNumber(debt)
     .multipliedBy(poolReserve.formattedPriceInMarketReferenceCurrency)
     .multipliedBy(marketReferencePriceInUsd)
     .shiftedBy(-USD_DECIMALS);
@@ -174,26 +180,13 @@ export const RepayModalContent = ({
     }
     setAssets(repayTokens);
     setTokenToRepayWith(repayTokens[0]);
-  }, [
-    currentMarket,
-    currentMarketData.v3,
-    debt,
-    nativeBalance,
-    networkConfig.baseAssetSymbol,
-    networkConfig.wrappedBaseAssetSymbol,
-    poolReserve.aTokenAddress,
-    poolReserve.iconSymbol,
-    poolReserve.symbol,
-    poolReserve.underlyingAsset,
-    tokenBalance,
-    underlyingBalance,
-  ]);
+  }, []);
 
   // debt remaining after repay
   const amountAfterRepay = valueToBigNumber(debt)
     .minus(amount || '0')
     .toString(10);
-  const amountAfterRepayInUsd = BigNumber(amountAfterRepay)
+  const amountAfterRepayInUsd = new BigNumber(amountAfterRepay)
     .multipliedBy(poolReserve.formattedPriceInMarketReferenceCurrency)
     .multipliedBy(marketReferencePriceInUsd)
     .shiftedBy(-USD_DECIMALS);

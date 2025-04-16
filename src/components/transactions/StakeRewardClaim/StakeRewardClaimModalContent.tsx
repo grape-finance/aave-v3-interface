@@ -37,7 +37,7 @@ export const StakeRewardClaimModalContent = ({ stakeAssetName, icon }: StakeRewa
   const currentChainId = useRootStore((store) => store.currentChainId);
   const currentMarketData = useRootStore((store) => store.currentMarketData);
   const [_amount, setAmount] = useState('');
-  const amountRef = useRef<string>();
+  const amountRef = useRef<string>(undefined);
 
   const { data: stakeUserResult } = useUserStakeUiData(currentMarketData, stakeAssetName);
   const { data: stakeGeneralResult } = useGeneralStakeUiData(currentMarketData, stakeAssetName);

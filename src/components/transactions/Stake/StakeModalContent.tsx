@@ -46,7 +46,7 @@ export const StakeModalContent = ({ stakeAssetName, icon }: StakeProps) => {
 
   // states
   const [_amount, setAmount] = useState('');
-  const amountRef = useRef<string>();
+  const amountRef = useRef<string>(undefined);
 
   const walletBalance = normalize(stakeUserData?.underlyingTokenUserBalance || '0', 18);
 
